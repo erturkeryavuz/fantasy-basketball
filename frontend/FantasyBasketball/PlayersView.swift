@@ -53,7 +53,8 @@ struct PlayersView: View {
                                     Text("Position: \(player.position), Age: \(player.age)")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
-                                    Text("Overall Rating: \(Double(player.overallRating) ?? 0 > 0 ? String(format: "%.1f", Double(player.overallRating) ?? 0) : "N/A")")
+                                    Text(String(format: "Overall Rating: %.1f", player.overallRating))
+
                                         .font(.footnote)
                                         .foregroundColor(.blue)
                                 }

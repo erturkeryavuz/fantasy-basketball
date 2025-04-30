@@ -28,55 +28,59 @@ struct PlayerDetailView: View {
 
     var body: some View {
         ZStack {
-            if isFlipped {
-                backCardView
-                    .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-            } else {
-                frontCardView
-            }
-        }
-        .frame(width: 320, height: 480)
-        .background(
+            rarityBackground(for: playerRarity)
+                .ignoresSafeArea()
+
             ZStack {
-                backgroundGradient(for: playerRarity)
-
-                if playerRarity == .DarkBlueDiamond || playerRarity == .pinkDiamond || playerRarity == .diamond {
-                    shineOverlay
+                if isFlipped {
+                    backCardView
+                        .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+                } else {
+                    frontCardView
                 }
-                glowingBorder(for: playerRarity)
-
             }
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .strokeBorder(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.blue.opacity(0.2), Color.yellow.opacity(0.4)]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 3
-                    )
-                    .shadow(color: Color.yellow.opacity(0.5), radius: 10, x: 0, y: 0)
-            )
+            .frame(width: 320, height: 480)
+            .background(
+                ZStack {
+                    backgroundGradient(for: playerRarity)
 
-        )
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .rotation3DEffect(
-            .degrees(isFlipped ? 180 : 0),
-            axis: (x: 0, y: 1, z: 0)
-        )
-        .animation(.easeInOut(duration: 0.6), value: isFlipped)
-        .onTapGesture {
-            isFlipped.toggle()
+                    if playerRarity == .DarkBlueDiamond || playerRarity == .pinkDiamond || playerRarity == .diamond {
+                        shineOverlay
+                    }
+                    glowingBorder(for: playerRarity)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .strokeBorder(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.blue.opacity(0.2), Color.yellow.opacity(0.4)]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 3
+                        )
+                        .shadow(color: Color.yellow.opacity(0.5), radius: 10, x: 0, y: 0)
+                )
+            )
+            .cornerRadius(20)
+            .shadow(radius: 10)
+            .rotation3DEffect(
+                .degrees(isFlipped ? 180 : 0),
+                axis: (x: 0, y: 1, z: 0)
+            )
+            .animation(.easeInOut(duration: 0.6), value: isFlipped)
+            .onTapGesture {
+                isFlipped.toggle()
+            }
         }
         .navigationTitle(player.name)
         .navigationBarTitleDisplayMode(.inline)
     }
 
+
     var playerRarity: Rarity {
-        let rating = Double(player.overallRating) ?? 0
+        let rating = player.overallRating
         switch rating {
         case 95...99: return .DarkBlueDiamond
         case 90..<95: return .pinkDiamond
@@ -86,6 +90,38 @@ struct PlayerDetailView: View {
         default: return .gold
         }
     }
+    
+    @ViewBuilder
+    func rarityBackground(for rarity: Rarity) -> some View {
+        switch rarity {
+        case .DarkBlueDiamond:
+            Image("darkblue_kart")
+                .resizable()
+                .scaledToFill()
+        case .pinkDiamond:
+            Image("pink_kart")
+                .resizable()
+                .scaledToFill()
+        case .diamond:
+            Image("diamond_kart")
+                .resizable()
+                .scaledToFill()
+        case .amethyst:
+            Image("mor_kart")
+                .resizable()
+                .scaledToFill()
+        case .ruby:
+            Image("red_kart")
+                .resizable()
+                .scaledToFill()
+        case .gold:
+            Image("gold_kart")
+                .resizable()
+                .scaledToFill()
+        }
+    }
+
+
     private func glowingBorder(for rarity: Rarity) -> some View {
         RoundedRectangle(cornerRadius: 20)
             .strokeBorder(borderGradient(for: rarity), lineWidth: 4)
@@ -195,7 +231,12 @@ struct PlayerDetailView: View {
             Text("Position: \(player.position)")
                 .font(.subheadline)
 
-            Text("Overall: \(Double(player.overallRating) ?? 0 > 0 ? String(format: "%.1f", Double(player.overallRating) ?? 0) : "N/A")")
+            Text("Overall: \(player.overallRating)")
+                .font(.title3)
+                .foregroundColor(.blue)
+
+
+
                 .font(.title3)
                 .foregroundColor(.blue)
         }
@@ -292,13 +333,13 @@ struct PlayerDetailView_Previews: PreviewProvider {
             teamName: "Golden State Warriors",
             position: "Guard",
             age: 36,
-            height: "188 cm",
-            weight: "84 kg",
+            height: 188,
+            weight: 84,
             profilePicture: "https://cdn.nba.com/headshots/nba/latest/1040x760/201939.png",
             bio: "Chef Curry",
             experienceYears: 14,
             nationality: "USA",
-            overallRating: "97",
+            overallRating: 97,
             bestSkill: "three_point_shooting",
            
         )
