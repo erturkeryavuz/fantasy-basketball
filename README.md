@@ -1,1 +1,1 @@
-# Fantasy Basketball Project
+# Fantasy Basketball App
