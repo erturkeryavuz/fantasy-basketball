@@ -12,14 +12,6 @@ struct BlurView: UIViewRepresentable {
 }
 
 
-enum Rarity {
-    case DarkBlueDiamond
-    case pinkDiamond
-    case diamond
-    case amethyst
-    case gold
-    case ruby
-}
 
 struct PlayerDetailView: View {
     let player: Player
@@ -28,8 +20,13 @@ struct PlayerDetailView: View {
 
     var body: some View {
         ZStack {
-            rarityBackground(for: playerRarity)
-                .ignoresSafeArea()
+            backgroundGradient(for: playerRarity)
+            .ignoresSafeArea()
+            .overlay(
+                BlurView(style: .systemMaterial)
+                    .ignoresSafeArea()
+            )
+
 
             ZStack {
                 if isFlipped {
@@ -78,7 +75,6 @@ struct PlayerDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-
     var playerRarity: Rarity {
         let rating = player.overallRating
         switch rating {
@@ -91,35 +87,7 @@ struct PlayerDetailView: View {
         }
     }
     
-    @ViewBuilder
-    func rarityBackground(for rarity: Rarity) -> some View {
-        switch rarity {
-        case .DarkBlueDiamond:
-            Image("darkblue_kart")
-                .resizable()
-                .scaledToFill()
-        case .pinkDiamond:
-            Image("pink_kart")
-                .resizable()
-                .scaledToFill()
-        case .diamond:
-            Image("diamond_kart")
-                .resizable()
-                .scaledToFill()
-        case .amethyst:
-            Image("mor_kart")
-                .resizable()
-                .scaledToFill()
-        case .ruby:
-            Image("red_kart")
-                .resizable()
-                .scaledToFill()
-        case .gold:
-            Image("gold_kart")
-                .resizable()
-                .scaledToFill()
-        }
-    }
+
 
 
     private func glowingBorder(for rarity: Rarity) -> some View {
@@ -156,9 +124,9 @@ struct PlayerDetailView: View {
         case .DarkBlueDiamond: return "Dark Blue Diamond 💠"
         case .pinkDiamond: return "Pink Diamond 💎"
         case .diamond: return "Diamond 🔷"
-        case .amethyst: return "Amethyst 💜"
-        case .ruby: return "Ruby "
-        case .gold: return "Gold 🥇"
+        case .amethyst: return "Amethyst 🟪"
+        case .ruby: return "Ruby 🛑"
+        case .gold: return "Gold ⭐️"
         }
     }
 

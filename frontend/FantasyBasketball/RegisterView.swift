@@ -3,24 +3,27 @@ import SwiftUI
 struct RegisterView: View {
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var isRegisterPressed: Bool = false // Register butonu için
-    @State private var isLoginPressed: Bool = false // Login butonu için
-    @State private var isHomePressed: Bool = false // Return to Home butonu için
-    @FocusState private var isEmailFocused: Bool // Email alanı için FocusState
-    @FocusState private var isPasswordFocused: Bool // Password alanı için FocusState
-    @State private var isRegistered: Bool = false // Kayıt sonrası yönlendirme için
+    @State private var isRegisterPressed: Bool = false
+    
+    @State private var isLoginPressed: Bool = false
+    
+    @State private var isHomePressed: Bool = false
+    
+    @FocusState private var isEmailFocused: Bool
+    
+    @FocusState private var isPasswordFocused: Bool
+    
+    @State private var isRegistered: Bool = false 
     
     var body: some View {
         NavigationStack {
             ZStack {
-                // Arka Plan Görseli
                 Image("registerbg1")
                     .resizable()
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
 
                 VStack(spacing: 20) {
-                    // Başlık
                     Text("Registration")
                         .font(.system(size: 45, weight: .bold, design: .rounded))
                         .foregroundStyle(
@@ -41,14 +44,12 @@ struct RegisterView: View {
 
                     Spacer()
                     
-                    // Login yönlendirme için NavigationDestination
                     .navigationDestination(isPresented: $isRegistered) {
                         LoginView()
                     }
 
 
 
-                    // Email TextField
                     CustomTextField(
                         text: $email,
                         placeholder: "Email",
@@ -56,7 +57,6 @@ struct RegisterView: View {
                     )
                     .focused($isEmailFocused)
 
-                    // Password TextField
                     CustomTextField(
                         text: $password,
                         placeholder: "Password",
@@ -64,7 +64,6 @@ struct RegisterView: View {
                     )
                     .focused($isPasswordFocused)
 
-                    // Register Button
                     Button(action: {
                         isRegisterPressed = true
                         AuthService.shared.registerUser(email: email, password: password) { result in
@@ -72,11 +71,10 @@ struct RegisterView: View {
                                 isRegisterPressed = false
                                 switch result {
                                 case .success(let message):
-                                    print(message) // Başarı mesajı
-                                    isRegistered = true // Login ekranına yönlendirme
+                                    print(message)
+                                    isRegistered = true
                                 case .failure(let error):
-                                    print(error.localizedDescription) // Hata mesajını kullanıcıya gösterebilirsiniz.
-                                }
+                                    print(error.localizedDescription)                                }
                             }
                         }
                     }){
@@ -101,7 +99,7 @@ struct RegisterView: View {
                                 .shadow(color: Color.orange.opacity(0.6), radius: 10, x: 0, y: 4)
                         )
                         .foregroundColor(.white)
-                        .scaleEffect(isRegisterPressed ? 0.95 : 1.0) // Tıklama efekti
+                        .scaleEffect(isRegisterPressed ? 0.95 : 1.0)
                         .animation(.easeInOut(duration: 0.2), value: isRegisterPressed)
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -111,7 +109,6 @@ struct RegisterView: View {
 
                     Spacer()
 
-                    // Login Link
                     NavigationLink(destination: LoginView()) {
                         HStack {
                             Image(systemName: "key.fill")
@@ -134,7 +131,7 @@ struct RegisterView: View {
                                 .shadow(color: Color.purple.opacity(0.6), radius: 10, x: 0, y: 4)
                         )
                         .foregroundColor(.white)
-                        .scaleEffect(isLoginPressed ? 0.95 : 1.0) // Tıklama efekti
+                        .scaleEffect(isLoginPressed ? 0.95 : 1.0)
                         .animation(.easeInOut(duration: 0.2), value: isLoginPressed)
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -142,7 +139,7 @@ struct RegisterView: View {
                         isLoginPressed = pressing
                     }, perform: {})
 
-                    // Return to Home Button
+                    
                     NavigationLink(destination: ContentView()) {
                         HStack {
                             Image(systemName: "house.fill")
@@ -165,14 +162,14 @@ struct RegisterView: View {
                                 .shadow(color: Color.black.opacity(0.4), radius: 10, x: 0, y: 5)
                         )
                         .foregroundColor(.white)
-                        .scaleEffect(isHomePressed ? 0.95 : 1.0) // Tıklama efekti
+                        .scaleEffect(isHomePressed ? 0.95 : 1.0)
                         .animation(.easeInOut(duration: 0.2), value: isHomePressed)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .onLongPressGesture(minimumDuration: 0.1, pressing: { pressing in
                         isHomePressed = pressing
                     }, perform: {})
-                    .padding(.bottom, 30) // Sayfanın altına yerleşim
+                    .padding(.bottom, 30)
                 }
                 .padding(.horizontal)
             }
@@ -188,7 +185,6 @@ struct CustomTextField: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            // Placeholder
             Text(placeholder)
                 .font(.headline)
                 .foregroundColor(.white.opacity(0.8))
@@ -196,26 +192,22 @@ struct CustomTextField: View {
 
             if isSecure {
                 SecureField("", text: $text)
-                    .keyboardType(.default) // Şifre için standart klavye düzeni
-                    .textInputAutocapitalization(.never) // Büyük harf kullanımını devre dışı bırakır
-                    .autocorrectionDisabled() // Otomatik düzeltmeyi kapatır
-                    .padding()
+                    .keyboardType(.default)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.black.opacity(0.6)) // Arka plan rengi
-                            .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 4)
+                            .fill(Color.black.opacity(0.6))                             .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 4)
                     )
                     .foregroundColor(.white)
             } else {
                 TextField("", text: $text)
-                    .keyboardType(.emailAddress) // Email için optimize edilmiş klavye
-                    .disableAutocorrection(true) // Otomatik düzeltmeyi kapatır
-                    .textInputAutocapitalization(.never) // Büyük harf kullanımını devre dışı bırakır
+                    .keyboardType(.emailAddress)
+                    .disableAutocorrection(true)                     .textInputAutocapitalization(.never)
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.black.opacity(0.6)) // Arka plan rengi
-                            .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 4)
+                            .fill(Color.black.opacity(0.6))                             .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 4)
                     )
                     .foregroundColor(.white)
             }

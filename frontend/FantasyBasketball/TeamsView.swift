@@ -13,7 +13,6 @@ struct TeamsView: View {
             } else {
                 List(teams) { team in
                     HStack {
-                        // Logo Gösterimi
                         if let logoURL = team.logo, let url = URL(string: logoURL) {
                             AsyncImage(url: url) { image in
                                 image
@@ -32,7 +31,6 @@ struct TeamsView: View {
                                 .foregroundColor(.gray)
                         }
 
-                        // Metin Gösterimi
                         VStack(alignment: .leading) {
                             Text(team.name)
                                 .font(.headline)

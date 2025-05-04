@@ -3,17 +3,21 @@ import SwiftUI
 struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var isPressed: Bool = false // Login butonu için
-    @State private var isSignUpPressed: Bool = false // Sign Up butonu için
-    @State private var isReturnToHomePressed: Bool = false // Return to Home butonu için
-    @FocusState private var isEmailFocused: Bool // Email alanı için FocusState
-    @FocusState private var isPasswordFocused: Bool // Password alanı için FocusState
-    @State private var navigateToHome: Bool = false // Ana sayfaya yönlendirme
+    @State private var isPressed: Bool = false
+    
+    @State private var isSignUpPressed: Bool = false
 
+    @State private var isReturnToHomePressed: Bool = false
+    
+    @FocusState private var isEmailFocused: Bool
+    
+    @FocusState private var isPasswordFocused: Bool
+
+    @State private var navigateToHome: Bool = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background Image
                 Image("registerbg1")
                     .resizable()
                     .scaledToFill()
@@ -40,7 +44,6 @@ struct LoginView: View {
 
                     Spacer()
 
-                    // Email TextField
                     CustomTextField(
                         text: $email,
                         placeholder: "Email",
@@ -48,7 +51,6 @@ struct LoginView: View {
                     )
                     .focused($isEmailFocused)
 
-                    // Password TextField
                     CustomTextField(
                         text: $password,
                         placeholder: "Password",
@@ -56,7 +58,6 @@ struct LoginView: View {
                     )
                     .focused($isPasswordFocused)
 
-                    // Login Button
                     Button(action: {
                         isPressed = true
                         AuthService.shared.loginUser(email: email, password: password) { result in
@@ -64,11 +65,10 @@ struct LoginView: View {
                                 isPressed = false
                                 switch result {
                                 case .success(let message):
-                                    print(message) // Başarı mesajı
+                                    print(message)
                                     navigateToHome = true
                                 case .failure(let error):
-                                    print(error.localizedDescription) // Hata mesajını kullanıcıya gösterebilirsiniz.
-                                }
+                                    print(error.localizedDescription)                                }
                             }
                         }
                     }) {
@@ -93,8 +93,7 @@ struct LoginView: View {
                                 .shadow(color: Color.purple.opacity(0.6), radius: 10, x: 0, y: 4)
                         )
                         .foregroundColor(.white)
-                        .scaleEffect(isPressed ? 0.95 : 1.0) // Tıklama efekti
-                        .animation(.easeInOut(duration: 0.2), value: isPressed)
+                        .scaleEffect(isPressed ? 0.95 : 1.0)                        .animation(.easeInOut(duration: 0.2), value: isPressed)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .onLongPressGesture(minimumDuration: 0.1, pressing: { pressing in
@@ -103,7 +102,6 @@ struct LoginView: View {
 
                     Spacer()
 
-                    // Sign Up Button
                     NavigationLink(destination: RegisterView()) {
                         HStack {
                             Image(systemName: "person.badge.plus")
@@ -126,15 +124,13 @@ struct LoginView: View {
                                 .shadow(color: Color.orange.opacity(0.6), radius: 10, x: 0, y: 4)
                         )
                         .foregroundColor(.white)
-                        .scaleEffect(isSignUpPressed ? 0.95 : 1.0) // Tıklama efekti
-                        .animation(.easeInOut(duration: 0.2), value: isSignUpPressed)
+                        .scaleEffect(isSignUpPressed ? 0.95 : 1.0)                         .animation(.easeInOut(duration: 0.2), value: isSignUpPressed)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .onLongPressGesture(minimumDuration: 0.1, pressing: { pressing in
                         isSignUpPressed = pressing
                     }, perform: {})
 
-                    // Return to Home Button
                     NavigationLink(destination: ContentView()) {
                         HStack {
                             Image(systemName: "house.fill")
@@ -157,7 +153,7 @@ struct LoginView: View {
                                 .shadow(color: Color.black.opacity(0.6), radius: 10, x: 0, y: 4)
                         )
                         .foregroundColor(.white)
-                        .scaleEffect(isReturnToHomePressed ? 0.95 : 1.0) // Tıklama efekti
+                        .scaleEffect(isReturnToHomePressed ? 0.95 : 1.0)
                         .animation(.easeInOut(duration: 0.2), value: isReturnToHomePressed)
                     }
                     .buttonStyle(PlainButtonStyle())
