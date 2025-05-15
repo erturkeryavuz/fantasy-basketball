@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email: String = ""
+    @State private var username: String = ""   // ✅ username olarak güncelle
     @State private var password: String = ""
     @State private var isPressed: Bool = false
     
@@ -9,7 +9,7 @@ struct LoginView: View {
 
     @State private var isReturnToHomePressed: Bool = false
     
-    @FocusState private var isEmailFocused: Bool
+    @FocusState private var isusernameFocused: Bool
     
     @FocusState private var isPasswordFocused: Bool
 
@@ -45,11 +45,11 @@ struct LoginView: View {
                     Spacer()
 
                     CustomTextField(
-                        text: $email,
-                        placeholder: "Email",
+                        text: $username,
+                        placeholder: "Username",
                         isSecure: false
                     )
-                    .focused($isEmailFocused)
+                    .focused($isusernameFocused)
 
                     CustomTextField(
                         text: $password,
@@ -60,13 +60,16 @@ struct LoginView: View {
 
                     Button(action: {
                         isPressed = true
-                        AuthService.shared.loginUser(email: email, password: password) { result in
+                        AuthService.shared.loginWithToken(username: username, password: password) { result in
+
                             DispatchQueue.main.async {
                                 isPressed = false
                                 switch result {
                                 case .success(let message):
                                     print(message)
+                                    UserDefaults.standard.set(username, forKey: "loggedInUsername")
                                     navigateToHome = true
+
                                 case .failure(let error):
                                     print(error.localizedDescription)                                }
                             }

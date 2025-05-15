@@ -1,10 +1,15 @@
-import Foundation
+import SwiftUI
 
-struct Team: Codable, Identifiable {
+
+struct Team: Identifiable, Codable {
     let id: Int
     let name: String
     let city: String
-    let established_year: Int
-    let logo: String? 
-    let arena_name: String?
+    let logo: String?
+    let establishedYear: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, city, logo
+        case establishedYear = "established_year"
+    }
 }

@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'myapp',
     'rest_framework',
     'corsheaders',
+    'rest_framework.authtoken',
+    'django_filters',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +138,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # ← bunu eklersen tarayıcıdan login olup test edebilirsin
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+

@@ -158,8 +158,21 @@ struct PlayersView: View {
                 }
             }
             .onAppear {
-                fetchPlayers()
+                print("👀 PlayersView açıldı, fetchPlayers() çağrılacak")
+                APIService.shared.fetchPlayers { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let data):
+                            print("✅ Oyuncular geldi: \(data.count) adet")
+                            self.players = data
+                        case .failure(let error):
+                            print("❌ Hata oluştu: \(error.localizedDescription)")
+                            self.errorMessage = "Error loading players: \(error.localizedDescription)"
+                        }
+                    }
+                }
             }
+
             .background(
                 LinearGradient(
                     gradient: Gradient(colors: [Color(.systemGray2), Color.orange.opacity(0.65)]),
@@ -187,41 +200,9 @@ struct PlayersView: View {
             return Color.yellow.opacity(0.7)
         }
     }
-
-    private func fetchPlayers() {
-        guard let url = URL(string: "http://127.0.0.1:8000/api/players/") else {
-            errorMessage = "Invalid URL"
-            return
-        }
-
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    errorMessage = "Failed to load players: \(error.localizedDescription)"
-                }
-                return
-            }
-
-            guard let data = data else {
-                DispatchQueue.main.async {
-                    errorMessage = "No data received from server"
-                }
-                return
-            }
-
-            do {
-                let decodedPlayers = try JSONDecoder().decode([Player].self, from: data)
-                DispatchQueue.main.async {
-                    players = decodedPlayers
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    errorMessage = "Failed to decode players: \(error.localizedDescription)"
-                }
-            }
-        }.resume()
+        
     }
-}
+
 
 struct PlayersView_Previews: PreviewProvider {
     static var previews: some View {

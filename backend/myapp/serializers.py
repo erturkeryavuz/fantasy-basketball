@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import Player, Team
 from django.contrib.auth.models import User
+from .models import UserCard
 import re
+from .models import League, UserLeague, Match, PlayerStats, TeamStats
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -76,6 +78,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class PlayerSerializer(serializers.ModelSerializer):
     team_name = serializers.CharField(source='team.name', read_only=True)
+    rarity = serializers.CharField(read_only=True)
 
     POSITION_CHOICES = [
         ('Guard', 'Guard'),
@@ -135,4 +138,63 @@ class PlayerSerializer(serializers.ModelSerializer):
             'nationality',
             'overall_rating',
             'best_skill',
+            'rarity',  # 👈 EKLENECEK
+        ]
+
+class UserCardSerializer(serializers.ModelSerializer):
+    player_name = serializers.CharField(source='player.name', read_only=True)
+    overall_rating = serializers.IntegerField(source='player.overall_rating', read_only=True)
+    rarity = serializers.CharField(source='player.rarity', read_only=True)  # 👈 rarity eklendi
+    acquired_at = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = UserCard
+        fields = ['player_name', 'overall_rating', 'rarity', 'acquired_at']
+
+
+
+
+class LeagueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = League
+        fields = '__all__'
+
+class UserLeagueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserLeague
+        fields = '__all__'
+
+class MatchSerializer(serializers.ModelSerializer):
+    player1_username = serializers.CharField(source='player1.username', read_only=True)
+    player2_username = serializers.CharField(source='player2.username', read_only=True)
+    winner_username = serializers.CharField(source='winner.username', read_only=True)
+
+    class Meta:
+        model = Match
+        fields = [
+            'id', 'player1', 'player1_username', 'player2', 'player2_username',
+            'winner', 'winner_username', 'league', 'date', 'scheduled_time',
+            'score1', 'score2', 'status'
+        ]
+
+class PlayerStatsSerializer(serializers.ModelSerializer):
+    player_username = serializers.CharField(source='player.username', read_only=True)
+
+    class Meta:
+        model = PlayerStats
+        fields = ['id', 'player', 'player_username', 'match', 'points', 'rebounds', 'assists']
+
+class TeamStatsSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user_league.user.username', read_only=True)
+    league_name = serializers.CharField(source='league.name', read_only=True)
+
+    class Meta:
+        model = TeamStats
+        fields = [
+            'id',
+            'username',
+            'league_name',
+            'wins',
+            'losses',
+            'total_points'
         ]

@@ -66,7 +66,7 @@ struct PlayerDetailView: View {
                 .degrees(isFlipped ? 180 : 0),
                 axis: (x: 0, y: 1, z: 0)
             )
-            .animation(.easeInOut(duration: 0.6), value: isFlipped)
+            .animation(.easeInOut(duration: 0.8), value: isFlipped)
             .onTapGesture {
                 isFlipped.toggle()
             }
@@ -309,7 +309,8 @@ struct PlayerDetailView_Previews: PreviewProvider {
             nationality: "USA",
             overallRating: 97,
             bestSkill: "three_point_shooting",
-           
+            rarity: "DarkBlueDiamond"
+
         )
         PlayerDetailView(player: examplePlayer)
     }

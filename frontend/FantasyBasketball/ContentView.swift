@@ -4,16 +4,15 @@ struct ContentView: View {
     @State private var startPoint = UnitPoint(x: 0, y: 0)
     @State private var endPoint = UnitPoint(x: 1, y: 1)
 
-    // Her buton için ayrı State
     @State private var isTeamsPressed: Bool = false
     @State private var isPlayersPressed: Bool = false
     @State private var isLoginPressed: Bool = false
     @State private var isRegisterPressed: Bool = false
 
+
     var body: some View {
         NavigationStack {
             ZStack {
-                // Animasyonlu Gradyan Arka Plan
                 LinearGradient(
                     gradient: Gradient(colors: [Color.orange, Color.black, Color.yellow]),
                     startPoint: startPoint,
@@ -29,13 +28,14 @@ struct ContentView: View {
                     }
                 }
 
-                VStack(spacing: 40) {
-                    Spacer()
+                VStack(spacing: 60) { // Logo ve Başlık
+                    Spacer(minLength: 10) // 🔥 Üst boşluk verdik ki top aşağı insin
+
                     Image("homelogo1.2")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 190, height: 190)
-                        .padding(.top, 40)
+                    
                     Text("Fantasy Basketball")
                         .font(.system(size: 41, weight: .bold, design: .rounded))
                         .foregroundStyle(
@@ -51,89 +51,12 @@ struct ContentView: View {
                                 .font(.system(size: 41, weight: .bold, design: .rounded))
                                 .foregroundColor(.black.opacity(0.2))
                                 .blur(radius: 4)
+                                
+
                         )
                     Spacer()
 
-                    // Üst Butonlar: View Teams & View Players
                     VStack(spacing: 20) {
-                        // View Teams Button
-                        NavigationLink(destination: TeamsView()) {
-                            HStack {
-                                Image(systemName: "sportscourt")
-                                    .font(.system(size: 18))
-                                    .foregroundColor(.white)
-                                Text("View Teams")
-                                    .font(.system(size: 20, weight: .semibold))
-                            }
-                            .padding()
-                            .frame(width: 230, height: 50)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [Color.orange, Color.red]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .shadow(color: Color.red.opacity(0.6), radius: 8, x: 0, y: 3)
-                            )
-                            .foregroundColor(.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.white.opacity(0.2), lineWidth: 1.5)
-                                    .blur(radius: 2)
-                            )
-                            .scaleEffect(isTeamsPressed ? 0.95 : 1.0) // Tıklama efekti
-                            .animation(.easeInOut(duration: 0.2), value: isTeamsPressed)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        .onLongPressGesture(minimumDuration: 0.1, pressing: { pressing in
-                            isTeamsPressed = pressing
-                        }, perform: {})
-
-                        // View Players Button
-                        NavigationLink(destination: PlayersView()) {
-                            HStack {
-                                Image(systemName: "person.3.fill")
-                                    .font(.system(size: 18))
-                                    .foregroundColor(.white)
-                                Text("View Players")
-                                    .font(.system(size: 20, weight: .semibold))
-                            }
-                            .padding()
-                            .frame(width: 230, height: 50)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [Color.orange, Color.red]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .shadow(color: Color.red.opacity(0.6), radius: 8, x: 0, y: 3)
-                            )
-                            .foregroundColor(.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.white.opacity(0.2), lineWidth: 1.5)
-                                    .blur(radius: 2)
-                            )
-                            .scaleEffect(isPlayersPressed ? 0.95 : 1.0) // Tıklama efekti
-                            .animation(.easeInOut(duration: 0.2), value: isPlayersPressed)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        .onLongPressGesture(minimumDuration: 0.1, pressing: { pressing in
-                            isPlayersPressed = pressing
-                        }, perform: {})
-                    }
-
-                    Spacer()
-
-                    // Alt Butonlar: Login & Register
-                    VStack(spacing: 12) {
-                        // Login Button
                         NavigationLink(destination: LoginView()) {
                             HStack {
                                 Image(systemName: "key.fill")
@@ -161,7 +84,7 @@ struct ContentView: View {
                                     .stroke(Color.white.opacity(0.2), lineWidth: 1.5)
                                     .blur(radius: 2)
                             )
-                            .scaleEffect(isLoginPressed ? 0.95 : 1.0) // Tıklama efekti
+                            .scaleEffect(isLoginPressed ? 0.95 : 1.0)
                             .animation(.easeInOut(duration: 0.2), value: isLoginPressed)
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -169,7 +92,7 @@ struct ContentView: View {
                             isLoginPressed = pressing
                         }, perform: {})
 
-                        // Register Button
+                
                         NavigationLink(destination: RegisterView()) {
                             HStack {
                                 Image(systemName: "person.badge.plus")
@@ -197,7 +120,7 @@ struct ContentView: View {
                                     .stroke(Color.white.opacity(0.2), lineWidth: 1.5)
                                     .blur(radius: 2)
                             )
-                            .scaleEffect(isRegisterPressed ? 0.95 : 1.0) // Tıklama efekti
+                            .scaleEffect(isRegisterPressed ? 0.95 : 1.0)
                             .animation(.easeInOut(duration: 0.2), value: isRegisterPressed)
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -206,7 +129,7 @@ struct ContentView: View {
                         }, perform: {})
                     }
 
-                    Spacer()
+                    .padding(.bottom, 60) // 🔥 Butonları iyice aşağıda ve havalı gösterir.
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 50)

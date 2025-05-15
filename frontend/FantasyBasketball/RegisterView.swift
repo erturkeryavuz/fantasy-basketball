@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct RegisterView: View {
+    @State private var username: String = ""
+    @FocusState private var isUsernameFocused: Bool
+
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isRegisterPressed: Bool = false
@@ -48,6 +51,12 @@ struct RegisterView: View {
                         LoginView()
                     }
 
+                    CustomTextField(
+                        text: $username,
+                        placeholder: "Username",
+                        isSecure: false
+                    )
+                    .focused($isUsernameFocused)
 
 
                     CustomTextField(
@@ -66,7 +75,8 @@ struct RegisterView: View {
 
                     Button(action: {
                         isRegisterPressed = true
-                        AuthService.shared.registerUser(email: email, password: password) { result in
+                        AuthService.shared.registerUser(username: username, email: email, password: password) { result in
+
                             DispatchQueue.main.async {
                                 isRegisterPressed = false
                                 switch result {

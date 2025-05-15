@@ -7,7 +7,10 @@ struct HomeView: View {
     @State private var isPlayersPressed: Bool = false
     @State private var isLogoutPressed: Bool = false // Logout butonu animasyonu
     @State private var navigateToLogin: Bool = false // Logout sonrası yönlendirme
-    @AppStorage("loggedInUser") private var userName: String = "" // Kullanıcı adı
+ 
+    @AppStorage("loggedInUsername") private var username: String = ""
+
+    @State private var isMarketplacePressed: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -20,20 +23,30 @@ struct HomeView: View {
                 )
                 .ignoresSafeArea()
                 .onAppear {
+                    if let token = UserDefaults.standard.string(forKey: "userToken") {
+                        print("🔑 Aktif Token:", token)
+                    } else {
+                        print("❌ Token Yok")
+                    }
+
+                    print("📧 User logged in as: \(username)")
+
                     withAnimation(
                         Animation.easeInOut(duration: 6).repeatForever(autoreverses: true)
                     ) {
                         startPoint = UnitPoint(x: 1, y: 0)
                         endPoint = UnitPoint(x: 0, y: 1)
                     }
-                    // Kullanıcı email bilgisini kontrol et
-                    print("User logged in as: \(userName)")
                 }
 
-                VStack(spacing: 40) {
+
+                
+
+                VStack(spacing: 20) {
                     // Kullanıcı Bilgisi
                     HStack {
-                        Text("Welcome, \(userName.isEmpty ? "Guest" : userName)")
+                        Text("Welcome, \(username.isEmpty ? "Guest" : username)")
+
                             .font(.headline)
                             .foregroundColor(.white)
                             .padding(10)
@@ -52,7 +65,7 @@ struct HomeView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 190, height: 190)
-                        .padding(.top, 40)
+                        .padding(.top, 30)
 
                     Text("Fantasy Basketball")
                         .font(.system(size: 41, weight: .bold, design: .rounded))
@@ -137,7 +150,63 @@ struct HomeView: View {
                             isPlayersPressed = pressing
                         }, perform: {})
                     }
+                    // Marketplace Button
+                    NavigationLink(destination: MarketplaceView()) {
+                        HStack {
+                            Image(systemName: "cart.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                            Text("Marketplace")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.white)
+                        }
+                        .padding()
+                        .frame(width: 230, height: 50)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.pink, Color.orange]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .shadow(color: Color.pink.opacity(0.6), radius: 8, x: 0, y: 3)
+                        )
+                        .scaleEffect(isMarketplacePressed ? 0.95 : 1.0)
+                        .animation(.easeInOut(duration: 0.2), value: isMarketplacePressed)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .onLongPressGesture(minimumDuration: 0.1, pressing: { pressing in
+                        isMarketplacePressed = pressing
+                    }, perform: {})
 
+                    // Cards Button
+                    NavigationLink(destination: MyCardsView()) {
+                        HStack {
+                            Image(systemName: "rectangle.stack.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                            Text("My Cards")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.white)
+                        }
+                        .padding()
+                        .frame(width: 230, height: 50)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.purple, Color.indigo]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .shadow(color: Color.purple.opacity(0.5), radius: 8, x: 0, y: 3)
+                        )
+                        .scaleEffect(1.0)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                     Spacer()
 
                     // Logout Button (Animasyonlu)
