@@ -26,3 +26,15 @@ Users build a roster by opening card packs, manage their team and lineup, browse
 **Backend** — Django + Django REST Framework, exposing a REST API (`/api/...`) for teams, players, and cards, with SQLite as the database and media storage for player pictures and team logos.
 
 **Frontend** — a native iOS app built with SwiftUI, communicating with the backend through a dedicated API service layer (`APIService.swift`, `AuthService.swift`).
+
+```
+fantasy-basketball/
+├── backend/              # Django + DRF REST API (SQLite, media storage)
+│   └── myapp/            # models, serializers, views, urls
+└── frontend/              # Native iOS app (SwiftUI, Xcode project)
+    └── FantasyBasketball/
+```
+
+## Status
+
+Graduation project — feature-complete for its original scope, not under active development.
